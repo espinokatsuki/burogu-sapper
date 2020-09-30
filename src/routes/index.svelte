@@ -1,46 +1,29 @@
-<style>
-	h1, figure, p {
-		text-align: center;
-		margin: 0 auto;
-	}
+<script>
+    import {onMount} from 'svelte'
+    import Post from "../components/Post.svelte";
 
-	h1 {
-		font-size: 2.8em;
-		text-transform: uppercase;
-		font-weight: 700;
-		margin: 0 0 0.5em 0;
-	}
-
-	figure {
-		margin: 0 0 1em 0;
-	}
-
-	img {
-		width: 100%;
-		max-width: 400px;
-		margin: 0 0 1em 0;
-	}
-
-	p {
-		margin: 1em auto;
-	}
-
-	@media (min-width: 480px) {
-		h1 {
-			font-size: 4em;
-		}
-	}
-</style>
+    let API = "http://localhost:8080/burogu/api/posts/v1/"
+    let posts = []
+    onMount(async () => {
+        posts = await fetch(API)
+                .then(x => x.json())
+                .then(value => {
+                            console.log(value)
+                            return value
+                        }
+                )
+    })
+</script>
 
 <svelte:head>
-	<title>Sapper project template</title>
+    <title>Burogu | Posts</title>
 </svelte:head>
 
-<h1>Great success!</h1>
+<div class="btn-group mb-4 w-100" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-secondary">Recent</button>
+    <button type="button" class="btn btn-secondary">Popular</button>
+</div>
 
-<figure>
-	<img alt='Success Kid' src='successkid.jpg'>
-	<figcaption>Have fun with Sapper!</figcaption>
-</figure>
-
-<p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>
+{#each posts as post}
+    <Post post={post}/>
+{/each}
